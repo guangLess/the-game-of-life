@@ -55,7 +55,8 @@ Board.prototype.get = function (coords) {
  * Set the value of the board at coords to value.
  */
 Board.prototype.set = function(coords, value) {
-  // TODO
+  if (value === true) this.cells[this.indexFor(coords)] = 1;
+  else this.cells[this.indexFor(coords)] = 0;
 }
 
 /**
@@ -64,7 +65,17 @@ Board.prototype.set = function(coords, value) {
  * Return the count of living neighbors around a given coordinate.
  */
 Board.prototype.livingNeighbors = function([row, col]) {
-  // TODO: Return the count of living neighbors.
+  var coords = [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1], [row - 1, col - 1], [row + 1, col + 1], [row - 1, col + 1], [row + 1, col - 1]]
+
+  var living = [];
+
+    for (var i = 0; i < coords.length; i++) {
+      if (this.get(coords[i]) === 1){
+        living.push(coords[i]);
+      }
+    }
+
+    return living.length;        
 }
 
 /**
@@ -73,7 +84,8 @@ Board.prototype.livingNeighbors = function([row, col]) {
  * Toggle the cell at coords from alive to dead or vice versa.
  */
 Board.prototype.toggle = function(coords) {
-  // TODO
+
+  this.set(coords,!this.get(coords))
 }
 
 /**
@@ -84,7 +96,17 @@ Board.prototype.toggle = function(coords) {
  * @param {Number} numLivingNeighbors 
  */
 function conway(isAlive, numLivingNeighbors) {
-  // TODO
+  if (isAlive && numLivingNeighbors < 2) {
+    return !isAlive;
+  } else if (isAlive && (numLivingNeighbors === 2 || numLivingNeighbors === 3)) {
+    return isAlive;
+  } else if (isAlive && numLivingNeighbors > 3) {
+    return !isAlive;
+  } else if (!isAlive && numLivingNeighbors === 3) {
+    return !isAlive;
+  } else {
+    return isAlive;
+  }
 }
 
 /**
@@ -96,6 +118,20 @@ function conway(isAlive, numLivingNeighbors) {
  * @param {(Boolean, Int) -> Boolean} rules (default: conway)
  */
 function tick(present, future, rules=conway) {
-  // TODO
+  // if no rules - got conway else use that rule 
+  if(rules){
+    //
+
+  } else {
+    //conway
+    present.cells.forEach(function(cell, index){
+      var coord = 
+        var coord = cell.get()
+        cell.get
+           conway(,)
+
+    })
+  }
+
   return [future, present]
 }

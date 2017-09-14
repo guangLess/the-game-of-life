@@ -125,7 +125,7 @@ function tick(present, future, rules=conway) {
   } else {
     //conway
     present.cells.forEach(function(cell, index){
-      var coord = 
+      //var row = index - /(present.width)
         var coord = cell.get()
         cell.get
            conway(,)

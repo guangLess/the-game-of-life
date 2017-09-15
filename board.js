@@ -55,6 +55,7 @@ Board.prototype.get = function (coords) {
  * Set the value of the board at coords to value.
  */
 Board.prototype.set = function(coords, value) {
+ // debugger;
   if (value === true) this.cells[this.indexFor(coords)] = 1;
   else this.cells[this.indexFor(coords)] = 0;
 }
@@ -96,6 +97,7 @@ Board.prototype.toggle = function(coords) {
  * @param {Number} numLivingNeighbors 
  */
 function conway(isAlive, numLivingNeighbors) {
+  debugger
   if (isAlive && numLivingNeighbors < 2) {
     return !isAlive;
   } else if (isAlive && (numLivingNeighbors === 2 || numLivingNeighbors === 3)) {
@@ -117,21 +119,35 @@ function conway(isAlive, numLivingNeighbors) {
  * @param {Board!} future (is mutated)
  * @param {(Boolean, Int) -> Boolean} rules (default: conway)
  */
-function tick(present, future, rules=conway) {
-  // if no rules - got conway else use that rule 
-  if(rules){
-    //
+function tick(present, future, rules = conway) {
 
-  } else {
-    //conway
-    present.cells.forEach(function(cell, index){
-      //var row = index - /(present.width)
-        var coord = cell.get()
-        cell.get
-           conway(,)
-
-    })
-  }
-
+  present.cells.forEach(function (cell, index) {
+    var r = Math.floor(index / present.width);
+    var c = index % present.width;
+    var state;
+    if (rules.name === 'conway') {
+      state = !!conway(cell, present.livingNeighbors([r, c]))
+      console.log(state)
+    } else {
+      state = rules(cell);
+    }
+    debugger;
+    future.set([r, c], state);
+  });
   return [future, present]
 }
+
+var block = new Board(2, 2, [
+  1, 1,
+  1, 1,
+])
+
+var glider1 = new Board(3, 3, [
+  1, 0, 1,
+  0, 1, 1,
+  0, 1, 0,
+])
+
+var future = new Board(2, 2)
+var g =tick(block, future);
+console.log(g)

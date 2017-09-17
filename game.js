@@ -5,6 +5,16 @@ if (mainElement) {
   // Connect #step_btn to the step function
   document.getElementById('step_btn')
     .addEventListener('click', game.step)
+  
+  document.getElementById('play_btn')
+    .addEventListener('click', game.togglePlaying)
+
+  document.getElementById('reset_btn')
+    .addEventListener('click', game.random)
+  
+    document.getElementById('clear_btn')
+    .addEventListener('click', game.clear)
+    
 
   // TODO: Connect other buttons.
 }
@@ -18,6 +28,7 @@ function Life(container, width=12, height=12) {
   var future = new Board(width, height);
 
   // Create a <table> to hold our cells.
+  const allCells = [];
   var table = createTable();
   
   // Put the table in our container
@@ -39,7 +50,8 @@ function Life(container, width=12, height=12) {
         // Element itself, letting us fetch it
         // in a click listener later.
         td.coord = [r, c];        
-        tr.appendChild(td);                            //     </td>
+        tr.appendChild(td);  
+        allCells.push(td);                          //     </td>
       }
       table.appendChild(tr);                           //   </tr>
     }                                                  //  </table>
@@ -50,8 +62,10 @@ function Life(container, width=12, height=12) {
     // FIXME: This currently always toggles cell (0, 0).
     // How do we get the coordinate of the cell that was clicked on?
     // HINT: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
-    var cell = document.getElementById('0-0'); // ⬅️ Fix me
-    present.toggle(cell.coord)
+    //debugger;
+    var cell = event.target.coord; // ⬅️ Fix me
+    debugger;
+    present.toggle(cell);
     paint()
   }
 
@@ -63,12 +77,24 @@ function Life(container, width=12, height=12) {
     //
     // To find all the <td>s in the table, you might query the DOM for them, or you
     // could choose to collect them when we create them in createTable.
-    //
+     //var allCells = mainElement.getElementsByTagName('TD');
+     //var allCells = document.querySelectorAll('td');
+
+
+     debugger;
+     for (var i = 0; i < allCells.length; i++) { 
+       var td = allCells[i];
+       if(present.get(td.coord)){
+         td.classList.add('alive')
+       } else {
+        td.classList.remove('alive')
+       }
+  }
     // HINT:
     //   https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
     //   https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByTagName
   }
-
+/*
   function step() {
     // Hello, destructuring assignment:
     //   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
@@ -102,7 +128,14 @@ function Life(container, width=12, height=12) {
     // Paint the new present
     paint();
   }
+  */
+  function step(rules){
+    ;[present, future] = tick(present, future, rules);
 
+    paint();
+  }
+
+  let interval = null;
   function play() {
     // TODO:
     // Start playing by running the `step` function    
@@ -110,25 +143,34 @@ function Life(container, width=12, height=12) {
     
     // HINT:
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+    interval = setInterval(step, 133)
   }
 
   function stop() {
     // TODO: Stop autoplay.
     // HINT:
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
+    clearInterval(interval)
+    interval = null 
   }
 
   function togglePlaying() {
+    interval ? stop() : play();
     // TODO: If we're playing, stop. Otherwise, start playing.
   }
 
   function clear() {
+    step(() => 0);
     // TODO: Clear the board
   }
 
   function random() {
     // TODO: Randomize the board
+    step(()=> Math.round(Math.random()))
   }
 
   return {play, step, stop, togglePlaying, random, clear}
 };
+
+// Questions: is present the same this.present ? 
+//Clear does not seem to work well. 

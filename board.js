@@ -66,17 +66,16 @@ Board.prototype.set = function(coords, value) {
  * Return the count of living neighbors around a given coordinate.
  */
 Board.prototype.livingNeighbors = function([row, col]) {
-  var coords = [[row - 1, col], [row + 1, col], [row, col - 1], [row, col + 1], [row - 1, col - 1], [row + 1, col + 1], [row - 1, col + 1], [row + 1, col - 1]]
-
-  var living = [];
-
-    for (var i = 0; i < coords.length; i++) {
-      if (this.get(coords[i]) === 1){
-        living.push(coords[i]);
-      }
-    }
-
-    return living.length;        
+  return (
+    this.get([row - 1, col])+ 
+    this.get([row + 1, col])+ 
+    this.get([row, col - 1])+
+    this.get([row, col + 1])+ 
+    this.get([row - 1, col - 1])+
+    this.get([row + 1, col + 1])+
+    this.get([row - 1, col + 1])+
+    this.get([row + 1, col - 1])
+  )
 }
 
 /**
@@ -85,8 +84,9 @@ Board.prototype.livingNeighbors = function([row, col]) {
  * Toggle the cell at coords from alive to dead or vice versa.
  */
 Board.prototype.toggle = function(coords) {
-
+ 
   this.set(coords,!this.get(coords))
+  return this
 }
 
 /**
@@ -97,7 +97,14 @@ Board.prototype.toggle = function(coords) {
  * @param {Number} numLivingNeighbors 
  */
 function conway(isAlive, numLivingNeighbors) {
-  debugger
+  
+  // return isAlive
+  // ? liveNeighbors === 2 || liveNeighbors == 3
+  // : liveNeighbors === 3
+
+  // how come you wont have to check for 0 and 1 conditions, event if they all return false, if there is no neibghors, it returns by default? 
+
+
   if (isAlive && numLivingNeighbors < 2) {
     return !isAlive;
   } else if (isAlive && (numLivingNeighbors === 2 || numLivingNeighbors === 3)) {
@@ -109,6 +116,7 @@ function conway(isAlive, numLivingNeighbors) {
   } else {
     return isAlive;
   }
+
 }
 
 /**
@@ -131,23 +139,8 @@ function tick(present, future, rules = conway) {
     } else {
       state = rules(cell);
     }
-    debugger;
+
     future.set([r, c], state);
   });
   return [future, present]
 }
-
-var block = new Board(2, 2, [
-  1, 1,
-  1, 1,
-])
-
-var glider1 = new Board(3, 3, [
-  1, 0, 1,
-  0, 1, 1,
-  0, 1, 0,
-])
-
-var future = new Board(2, 2)
-var g =tick(block, future);
-console.log(g)

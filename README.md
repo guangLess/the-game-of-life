@@ -1,4 +1,11 @@
 # Game of Life
+My version
+fix livingneighbors;
+
+
+
+
+
 
 * [Learning Objectives](#learning-objectives)
 * [Overview](#overview)
